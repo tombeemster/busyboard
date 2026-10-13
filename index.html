@@ -11,18 +11,34 @@
        --slider-stack-gap between horizontal sliders (wider, so each is comfortable to grab). */
     :root { --set: 12px; --pad: 32px; --gap: 16px; --slider-gap: 40px; --slider-stack-gap: 32px;
       /* One frame for tiles and the card alike. */
-      --tile-radius: var(--wa-panel-border-radius);
+      --tile-radius: 8px;
       /* The tile edge: two stacked 1px rings, also used for the card's divider. */
-      --tile-edge: rgba(0, 0, 0, 0.06);
-      --tile-edge-light: rgba(196, 196, 196, 0.07);
-      --tile-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+      --tile-edge: rgba(0, 0, 0, 0.1);
+      --tile-edge-light: rgba(196, 196, 196, 0.1);
+      --tile-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
         inset 0 0 0 1px var(--tile-edge), inset 0 -1px 0 0 var(--tile-edge),
-        inset 0 0 0 1px var(--tile-edge-light); }
+        inset 0 0 0 1px var(--tile-edge-light);
+      --tile-background: rgba(255, 255, 255, 0.03); } /* for the card's body */
     body { margin: 0; min-height: 100dvh; box-sizing: border-box; padding: 24px 16px;
-      display: grid; grid-template-rows: 1fr auto; gap: 16px; }
+      display: flex; flex-direction: column; gap: 16px; }
+    /* Minigame progress: a row of its own between the board's rows once the first one is
+       completed (app.js), as wide as the board and framed like the tiles (its text lines up with
+       theirs). A green check mark on the first line of text, then the count and the completed
+       minigames struck through; those move to the next line(s), left-aligned, when they don't fit. */
+    #progress { min-width: 0; padding: var(--gap) var(--pad); border: none; border-radius: var(--tile-radius);
+      background: var(--tile-background); box-shadow: var(--tile-shadow); }
+    #progress::part(icon) { color: var(--wa-color-success-fill-loud); align-self: flex-start; height: 1lh; font-size: inherit; }
+    #progress svg { margin: 0 var(--set) 0 0; }
+    #progress::part(message) { flex: 1; }
+    .progress, .done { display: flex; flex-wrap: wrap; gap: 4px var(--set); }
+    /* The count takes its line's spare width: the names sit at the right while they share the
+       line, and start at the left once they've moved to the next. */
+    .progress > :first-child { flex-grow: 1; }
+    .done { color: var(--wa-color-text-quiet); }
+    #progress[hidden] { display: none; }
     /* A quiet title line at the bottom. */
     footer { text-align: center; font-size: var(--wa-font-size-xs); color: var(--wa-color-text-quiet); }
-    main { display: grid; place-items: center; }
+    main { flex: 1; display: grid; place-items: center; }
 
     /* Rows of components with similar heights. Items share their row's height and hug their
        component (plus padding); a .stretch item takes the row's spare width. */
@@ -60,7 +76,8 @@
        sits where a tile border would: same height, same gaps, same padding, no own surface. */
     .item:not(.tile) { padding: 0; place-items: stretch; }
     .item > wa-card { --spacing: var(--pad); background-color: transparent;
-      border: none; border-radius: var(--tile-radius); box-shadow: var(--tile-shadow); }
+      border: none; border-radius: var(--tile-radius); box-shadow: var(--tile-shadow);
+      background: var(--tile-background); }
     /* Same padding in the header as in the body; the body fills the card and centres its content. */
     /* The divider is drawn like the tile edge (same two 1px rings) instead of the card's own border. */
     .item > wa-card::part(header) { padding: var(--spacing); border-block-end: none;
@@ -68,7 +85,7 @@
     .item > wa-card::part(body) { flex: 1; display: flex; flex-direction: column; justify-content: center; }
     /* Tiles mark a region with a border only; same background as the page. */
     .tile { 
-      /* border: var(--wa-panel-border-width) var(--wa-panel-border-style) var(--wa-color-surface-border); */
+      background: var(--tile-background);
       border-radius: var(--tile-radius);
       box-shadow: var(--tile-shadow);
     }

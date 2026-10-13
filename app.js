@@ -40,6 +40,11 @@ const styles = board.css.map(href => new Promise(resolve => {
 
 const el = document.getElementById('board');
 el.innerHTML = board.rows.map(row => `<div class="row" data-kind="${row.kind}">${row.tiles.map(t => `<div class="item${t.keep ? ' keep' : ''}${t.stretch ? ' stretch' : ''}${t.tile ? ' tile' : ''}" data-type="${t.type}">${t.html}</div>`).join('')}</div>`).join('');
+// The minigame progress callout (see showProgress): a row of its own in a place seeded by the
+// date, above, between or below the board's rows.
+const slot = [...board.date].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 2654435761), 7) >>> 0;
+const callout = Object.assign(document.createElement('wa-callout'), { id: 'progress', hidden: true });
+el.insertBefore(callout, el.children[slot % (el.children.length + 1)] ?? null); // null: after the last row
 
 // The loader registers every wa-* element on the page. It finds its components relative to
 // a <script> tag pointing at it, so add one; importing the same URL then gives the same
@@ -112,12 +117,15 @@ let pending;
 const refill = () => { cancelAnimationFrame(pending); pending = requestAnimationFrame(fill); };
 const watch = new ResizeObserver(refill);
 el.querySelectorAll('.row[data-kind="tall"] > .item').forEach(item => watch.observe(item));
-addEventListener('resize', refill);
+// Only a change in width: phones fire resize when the browser's toolbar slides away during a
+// scroll, and measuring then (every row on one line, so a much shorter page) jumps the scroll.
+let wide = innerWidth;
+addEventListener('resize', () => { if (innerWidth !== wide) { wide = innerWidth; refill(); } });
 setMode(dark.matches); // again, now that the card's toggle exists to show it
-// The board's arrow tiles: always pressable; where there's no board to go to, a toast says so.
+// The board's arrow tiles: always pressable; where there's no board to go to, nothing happens.
 for (const button of el.querySelectorAll('wa-button[data-step]')) {
   const step = Number(button.dataset.step);
-  button.addEventListener('click', () => jump(step) || toast(step > 0 ? 'This is the newest board. A new one appears tomorrow.' : 'This is the very first board.'));
+  button.addEventListener('click', () => jump(step));
 }
 el.classList.add('ready');
 
@@ -199,16 +207,12 @@ if (picker) {
 }
 setAccent(brand);
 
-// Game groundwork for the minigames: a toast, a celebration dialog, a jump to another board
-// and achievements, remembered across boards in this browser. (Also on window.busyboard, to try
+// Game groundwork for the minigames: a progress callout, a celebration dialog, a jump to
+// another board and achievements, remembered across boards in this browser. (Also on window.busyboard, to try
 // them from the console.)
 const stage = document.createElement('div');
-stage.innerHTML = '<wa-toast placement="bottom-center"></wa-toast><wa-dialog light-dismiss with-footer></wa-dialog>';
+stage.innerHTML = '<wa-dialog light-dismiss with-footer></wa-dialog>';
 document.body.append(stage);
-const toast = (message, variant = 'brand') => {
-  const item = Object.assign(document.createElement('wa-toast-item'), { variant, textContent: message });
-  stage.querySelector('wa-toast').append(item); // shows itself, then removes itself after its duration
-};
 // Resolves when the dialog has closed: true if its button was used, false if it was dismissed
 // (Escape, clicking outside), so a game can act on a deliberate choice. Dialogs queue: a second
 // one opens once the first has closed.
@@ -234,17 +238,27 @@ const unlock = name => {
 };
 // The minigames, collected across boards: each board has some of them (it leaves some tiles
 // out), so completing them all takes more than one board. The controls this board has:
-const minigames = ['code', 'series', 'fifth', 'sync', 'hundred', 'scan'];
+const minigames = { code: 'The code', series: 'Next in the series', fifth: 'The fifth member', sync: 'Time in sync', hundred: 'Counting to a hundred', scan: 'The QR code' };
+const total = Object.keys(minigames).length;
 const [tags, dropdown, time, number, qr] = ['wa-tag-input', 'wa-select[data-answer]', 'wa-time-input', 'wa-number-input', 'wa-qr-code'].map(s => el.querySelector(s));
-// The first time a minigame is completed (on any board): a toast with the progress, or a
-// celebration dialog when it was the last one. Repeats show nothing.
+// The progress callout, a row of the board: there from the first completed
+// minigame on, on every board: a check mark, what was just completed and the count, and
+// to the right the completed minigames, struck through.
+const showProgress = (message = '') => {
+  const done = Object.keys(minigames).filter(game => completed.has(game));
+  callout.hidden = !done.length;
+  callout.innerHTML = '<svg slot="icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>'
+    + `<div class="progress"><span>${message && message + ' · '}${done.length} of ${total} minigames completed</span><span class="done">${done.map(game => `<s>${minigames[game]}</s>`).join('')}</span></div>`;
+  return done.length;
+};
+showProgress();
+// The first time a minigame is completed (on any board): the callout updates, and the last one
+// also opens a celebration dialog. Repeats show nothing.
 const complete = (name, message) => {
   if (!unlock(name)) return;
-  const done = minigames.filter(game => completed.has(game)).length;
-  if (done === minigames.length) celebrate({ title: 'All minigames done!', body: `You completed all ${done} minigames across the boards. Every toy has given up its secret.`, action: 'Yay!' });
-  else toast(`${message} · Completed ${done} of ${minigames.length} minigames`, 'success');
+  if (showProgress(message) === total) celebrate({ title: 'All minigames done!', body: `You completed all ${total} minigames across the boards. Every toy has given up its secret.`, action: 'Yay!' });
 };
-window.busyboard = { toast, celebrate, jump, unlock, complete };
+window.busyboard = { celebrate, jump, unlock, complete };
 
 // The time input. Light from 07:00 to 19:00, dark otherwise (a stand-in for real sunrise and
 // sunset at the visitor's location). Minigame, in sync: setting it to the current time (give or

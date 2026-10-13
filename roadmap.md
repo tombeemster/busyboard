@@ -20,7 +20,7 @@ build on earlier ones.
 
 ## Phase 3 · Game groundwork (`app.js`) ✓
 
-- One helper each for a celebration dialog (`wa-dialog`), a toast (`wa-toast`) and moving to
+- One helper each for a celebration dialog (`wa-dialog`), a progress callout (`wa-callout`, at the top of the page) and moving to
   the next/previous board.
 - Remember unlocked achievements per viewer (localStorage).
 - Principle 2 already allows board-to-board navigation.
@@ -30,14 +30,15 @@ build on earlier ones.
 Up to six minigames (code, next in the series, the fifth member, time in sync, counting to a
 hundred, the QR code); each board leaves one or two of the code, time and number tiles out, so
 the optional tiles get room too, and the controls it has are always on show. Completing one the
-first time, on any board, shows a toast, "<what> · Completed n of 6 minigames"; completing the last one opens a celebration dialog instead; repeats show nothing.
+first time, on any board, updates the callout at the top, "<what> · n of 6 minigames completed"
+(it stays there from the first completed minigame on); completing the last one also opens a celebration dialog; repeats show nothing.
 The midnight jump is not a minigame, and keeps its own dialog.
 
 1. **Code** ✓: the tag input starts with four different digits, spelled out ("five, nine…"; 1–9:
    the numpad has no 0, the tag input drops duplicates); typed into
    the four-digit code in that order they complete the game.
    A wrong code shows an error state (danger boxes, a shake). Both tiles are always shown.
-2. **Time in sync** ✓: setting the time input to the current time (±1 minute) shows a toast:
+2. **Time in sync** ✓: setting the time input to the current time (±1 minute) shows in the callout:
    "You're in sync".
 3. **Midnight jump** ✓ (a board switch, not counted as a minigame): setting the time to 00:00 opens a dialog introducing the jump; its
    Jump button moves to the next (newer) board, dismissing cancels. The newest board says a new
