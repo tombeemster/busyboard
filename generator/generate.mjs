@@ -1,12 +1,10 @@
-// Writes boards/YYYY-MM-DD.json for each date and updates boards/index.json.
-// Usage: node generate.mjs [from] [to]   (defaults to today; existing boards are kept)
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
-import { lib, looks, fields, five, secrets, components } from './catalog.mjs';
+import { lib, looks, fields, five, secrets, components, extras } from './catalog.mjs';
 
-const today = new Date().toLocaleDateString('sv-SE'); // local YYYY-MM-DD (toISOString is UTC)
+const today = new Date().toLocaleDateString('sv-SE');
 const [from = today, to = from] = process.argv.slice(2);
 
-// Seeded PRNG (mulberry32) from a string hash, so a date always gives the same board.
+// Seeded PRNG (mulberry32): a date always gives the same board.
 function rng(seed) {
   let a = [...seed].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 2654435761), 1779033703);
   const next = () => {
@@ -25,23 +23,13 @@ function rng(seed) {
   return r;
 }
 
-// Three rows in a seeded order: the tall row with every tall component (the chart, numpad and
-// their partners belong together; the QR code takes the numpad's place when the board has
-// one), and two low rows that share all low components (minus the
-// field that went into the card), dealt in a seeded order with the stretch and kept tiles
-// spread over both first. The low rows hold more than fits: the viewer shows them in order while they fit
-// the tall row's width (app.js). Each row's tiles in a seeded order.
 function rows(r, board) {
   const left = [board.field.type, board.qr ? 'numpad' : 'qr', ...board.out];
   const used = components.filter(c => !left.includes(c.type));
   const low = r.shuffle(used.filter(c => c.row === 'low'));
   const lowRows = [[], []];
-  // Dealt alternately so both rows share them: stretch tiles that aren't kept, then kept tiles
-  // (stretching ones first, then the two board arrows, then the others), then the rest. Each row
-  // gets one stretch tile, one arrow and half the other kept ones.
   const order = c => (c.stretch && !c.keep ? 0 : c.keep ? (c.stretch ? 1 : c.nav ? 2 : 3) : 4);
   [...low].sort((a, b) => order(a) - order(b)).forEach((c, i) => lowRows[i % 2].push(c));
-  // Within a row the order is seeded, except the arrows: ← always first, → always last.
   const place = t => (t.type === 'prev' ? -1 : t.type === 'next' ? 1 : 0);
   return r.shuffle([
     ...lowRows.map(tiles => ({ kind: 'low', tiles: r.shuffle(tiles).sort((a, b) => place(a) - place(b)) })),
@@ -49,25 +37,39 @@ function rows(r, board) {
   ]);
 }
 
+// The extras use an RNG stream of their own, so adding them never changes the board itself.
+function around(date, board) {
+  const r = rng(`${date}/wings`), all = offBoard(r, board);
+  return Object.fromEntries(['low', 'tall'].map(kind => [kind, once(r, all.filter(e => e.row === kind)).map((e, i) => e.html(r, `x${kind[0]}${i}`))]));
+}
+
+function offBoard(r, board) {
+  const left = [...board.out, board.qr ? 'numpad' : 'qr'];
+  const outside = { ...board, secret: r.pick(secrets) };
+  return [...extras, ...components.filter(c => left.includes(c.type)).map(c => ({ row: c.row, html: (r, id) => c.html(r, id, outside) }))];
+}
+function once(r, list) {
+  const pool = r.shuffle(list);
+  return pool.filter(e => !e.either || e === pool.find(x => x.either));
+}
+
 function generate(date) {
   const r = rng(date);
   const look = Object.fromEntries(Object.entries(looks).map(([k, v]) => [k, r.pick(v)]));
-  // Choices several components share. Each board leaves one or two minigame tiles out (the code,
-  // and the time and number inputs that aren't in the card), so the optional low tiles get room
-  // too; the dropdown and tag input stay, as other games and the clue build on them. Without the
-  // code there's nothing to type into, so the QR code takes the numpad's place.
   const field = r.pick(fields);
   const out = r.some(['otp', ...['time', 'number'].filter(type => type !== field.type)], r.int(1, 2));
   const board = { field, five: five(r), out, qr: out.includes('otp') || r.chance(0.5), secret: r.pick(secrets) };
+  const laid = rows(r, board);
   return {
     date,
     look,
     css: lib.css(look),
     js: lib.js,
     classes: lib.classes(look),
-    rows: rows(r, board).map(({ kind, tiles }, row) => ({ kind, tiles: tiles.map((c, i) => ({
+    rows: laid.map(({ kind, tiles }, row) => ({ kind, tiles: tiles.map((c, i) => ({
       type: c.type, ...(c.keep && { keep: true }), ...(c.stretch && { stretch: true }), ...(c.tile && { tile: true }), html: c.html(r, `r${row}t${i}`, board),
     })) })),
+    extras: around(date, board),
   };
 }
 

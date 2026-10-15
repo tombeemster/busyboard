@@ -1,0 +1,530 @@
+/* Busyboard styles. */
+
+/* ── Tokens ── */
+
+:root {
+  --set: 12px;
+  --pad: 32px;
+  --gap: 16px;
+  /* A tall tile is two low ones plus a gap; --low also leaves room for the 200px vertical slider track. */
+  --low: max(60px + 2 * var(--pad), (200px + 2 * var(--pad) - var(--gap)) / 2);
+  --slider-gap: 40px;
+  --slider-stack-gap: 32px;
+  --sliders-min: 10rem;
+  --tile-radius: 8px;
+  --tile-edge: rgba(0, 0, 0, 0.1);
+  --tile-edge-light: rgba(196, 196, 196, 0.1);
+  --tile-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.06), inset 0 0 0 1px var(--tile-edge), inset 0 -1px 0 0 var(--tile-edge), inset 0 0 0 1px var(--tile-edge-light);
+  --tile-background: rgba(255, 255, 255, 0.03);
+}
+
+/* ── Page ── */
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  overflow: clip;
+  padding: 24px 16px;
+}
+
+/* ── Board, rows and tiles ── */
+
+.board {
+  position: relative;
+  display: grid;
+  gap: var(--gap);
+  max-width: 100%;
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.board.ready {
+  opacity: 1;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+
+.item {
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: var(--pad);
+  box-sizing: border-box;
+}
+
+.item.stretch {
+  flex: 1 1 0;
+}
+
+.item[hidden] {
+  display: none;
+}
+
+.tile, .item > wa-card, #progress {
+  background: var(--tile-background);
+  border-radius: var(--tile-radius);
+  box-shadow: var(--tile-shadow);
+}
+
+.item:not(.tile) {
+  padding: 0;
+  place-items: stretch;
+}
+
+.item > wa-card {
+  --spacing: var(--pad);
+  border: none;
+}
+
+.item > wa-card::part(header) {
+  padding: var(--spacing);
+  border-block-end: none;
+  box-shadow: inset 0 -1px 0 0 var(--tile-edge), inset 0 -1px 0 0 var(--tile-edge-light);
+}
+
+.item > wa-card::part(body) {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.set {
+  display: flex;
+  align-items: center;
+  gap: var(--set);
+}
+
+.spread {
+  justify-content: space-between;
+}
+
+/* ── Layout states (layout.js) ── */
+
+@media (min-width: 768px) {
+  .row[data-kind="low"] > .item, .item[data-kind="low"] {
+    height: var(--low);
+  }
+  .row[data-kind="tall"] > .item, .item[data-kind="tall"] {
+    height: calc(2 * var(--low) + var(--gap));
+  }
+}
+
+.board.measuring .row {
+  flex-wrap: nowrap;
+}
+
+.board.measuring .item {
+  flex: none;
+}
+
+.board.measuring .sliders {
+  width: var(--sliders-min);
+}
+
+/* Measured at its placeholder's width, not the default input width. */
+.board.measuring wa-tag-input::part(input) {
+  field-sizing: content;
+}
+
+/* ── Around the board (wide screens, layout.js) ── */
+
+.wing, .filler {
+  position: absolute;
+  inset-block: 0;
+}
+
+.wing.left, .filler.left {
+  right: calc(100% + var(--gap));
+}
+
+.wing.right, .filler.right {
+  left: calc(var(--end, 100%) + var(--gap));
+}
+
+.wing {
+  display: flex;
+  gap: var(--gap);
+}
+
+.wing.left {
+  flex-direction: row-reverse;
+}
+
+.above, .below {
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap);
+}
+
+.above {
+  bottom: calc(100% + var(--gap));
+  flex-direction: column-reverse;
+}
+
+.below {
+  top: calc(100% + var(--gap));
+}
+
+.band {
+  display: flex;
+  gap: var(--gap);
+}
+
+.pool {
+  position: absolute;
+  inset: 0 auto auto 0;
+  display: flex;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ── Progress callout ── */
+
+#progress {
+  min-width: 0;
+  padding: var(--gap) 24px;
+  border: none;
+}
+
+#progress::part(icon) {
+  color: var(--wa-color-success-fill-loud);
+  align-self: flex-start;
+  height: 1lh;
+  font-size: inherit;
+}
+
+#progress svg {
+  margin-inline-end: var(--set);
+}
+
+#progress::part(message) {
+  flex: 1;
+}
+
+.progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 80px;
+}
+
+.progress > :first-child {
+  flex-grow: 1;
+}
+
+.done {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--set);
+  color: var(--wa-color-text-quiet);
+}
+
+/* Web Awesome styles every native button; this one starts from nothing. */
+.reset {
+  all: unset;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.reset:focus-visible {
+  outline: var(--wa-focus-ring);
+  outline-offset: 2px;
+}
+
+.progress-row {
+  position: relative;
+  display: grid;
+  justify-self: center;
+  max-width: 100%;
+}
+
+.progress-row[hidden] {
+  display: none;
+}
+
+.filler {
+  width: 100vw;
+}
+
+/* ── Toast and credits ── */
+
+wa-toast-item::part(progress-ring) {
+  --size: 2em;
+}
+
+wa-toast-item::part(close-button) {
+  padding-block: var(--wa-space-s);
+}
+
+.credit {
+  font-size: var(--wa-font-size-s);
+  color: var(--wa-color-text-quiet);
+}
+
+.credit wa-avatar {
+  --size: 56px;
+}
+
+/* ── Board components ── */
+
+/* The OTP caps its box row at 100% and scrolls; at content size that clips the last box. */
+wa-otp-input::part(segments) {
+  max-width: none;
+}
+
+wa-otp-input {
+  --segment-size: var(--wa-form-control-height);
+}
+
+/* Sized to its value instead of the native default width. */
+wa-number-input::part(input) {
+  field-sizing: content;
+  min-width: 2ch;
+}
+
+wa-otp-input.wrong {
+  animation: shake .4s;
+}
+
+wa-otp-input.wrong::part(segment) {
+  border-color: var(--wa-color-danger-border-loud);
+  color: var(--wa-color-danger-on-quiet);
+}
+
+@keyframes shake {
+  20%, 60% {
+    translate: -4px;
+  }
+  40%, 80% {
+    translate: 4px;
+  }
+}
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--set);
+}
+
+[data-type="switches"] wa-checkbox-group {
+  --gap: 1em;
+}
+
+.faders {
+  display: flex;
+  gap: var(--slider-gap);
+}
+
+[data-type="sliders"] wa-slider {
+  --wa-form-control-activated-color: var(--accent-1);
+}
+
+.sliders {
+  display: grid;
+  gap: var(--slider-stack-gap);
+  width: 100%;
+  min-width: var(--sliders-min);
+}
+
+/* ── Chart ── */
+
+.chart {
+  display: flex;
+  align-items: center;
+  gap: var(--pad);
+}
+
+.doughnut {
+  width: 8rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  mask: radial-gradient(farthest-side, transparent var(--hole, 55%), #000 calc(var(--hole, 55%) + 1%));
+}
+
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  font-size: var(--wa-font-size-s);
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--set);
+}
+
+.legend li::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--swatch);
+}
+
+.legend li.off, .chart.counting .legend li {
+  opacity: .4;
+}
+
+.dial {
+  position: relative;
+}
+
+.count {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  font-size: var(--wa-font-size-l);
+  font-weight: var(--wa-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart.counting .count {
+  display: grid;
+}
+
+/* ── Extras ── */
+
+.stack {
+  display: grid;
+  gap: var(--set);
+}
+
+.meter {
+  display: flex;
+  width: 10rem;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.spark {
+  width: 10rem;
+  height: 3rem;
+}
+
+.spark polyline {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 10rem;
+}
+
+.bars span {
+  width: 16px;
+  border-radius: 4px 4px 0 0;
+}
+
+.profile {
+  justify-items: center;
+}
+
+.profile wa-avatar {
+  --size: 4rem;
+}
+
+.cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--set);
+  max-width: 16rem;
+}
+
+.month {
+  display: grid;
+  grid-template-columns: repeat(7, 1.75rem);
+  gap: 4px;
+}
+
+.day {
+  all: unset;
+  display: grid;
+  place-items: center;
+  height: 1.75rem;
+  border-radius: 4px;
+  font-size: var(--wa-font-size-s);
+  cursor: pointer;
+}
+
+.day:hover {
+  background: var(--wa-color-neutral-fill-quiet);
+}
+
+.day:focus-visible {
+  outline: var(--wa-focus-ring);
+}
+
+.day[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 2px var(--accent-1);
+}
+
+.list {
+  margin: 0;
+  padding-inline-start: 2em;
+  line-height: 2;
+}
+
+wa-split-panel {
+  border-radius: var(--tile-radius);
+  overflow: hidden;
+}
+
+/* Its edge fade must match the tile: the page plus --tile-background's 3% white. */
+wa-scroller {
+  --shadow-color: color-mix(in srgb, var(--wa-color-surface-default), white 3%);
+}
+
+.avatars {
+  display: flex;
+}
+
+.avatars wa-avatar + wa-avatar {
+  margin-inline-start: -0.75rem;
+}
+
+/* ── Phones (last, so it overrides the rules above; layout.js reads --mobile) ── */
+
+@media (max-width: 767.98px) {
+  :root {
+    --mobile: 1;
+    --pad: 24px;
+  }
+  .item {
+    flex: 1 1 auto;
+  }
+  .item[data-type="prev"], .item[data-type="next"] {
+    flex: none;
+  }
+  .wing, .above, .below, .pool, .filler {
+    display: none;
+  }
+}

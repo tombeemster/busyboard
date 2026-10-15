@@ -103,5 +103,41 @@
         }
       ]
     }
-  ]
+  ],
+  "extras": {
+    "low": [
+      "<nav class='set' aria-label='Menu'><wa-button appearance='plain'>About</wa-button><wa-button appearance='plain'>Games</wa-button><wa-button appearance='plain'>Toys</wa-button></nav>",
+      "<wa-copy-button value='Busy'></wa-copy-button>",
+      "<wa-progress-bar indeterminate label='Loading' style='width: 10rem; --track-height: 8px'></wa-progress-bar>",
+      "<svg class='spark' viewBox='0 0 100 30' role='img' aria-label='A sparkline'><polyline points='0,22 10,12 20,25 30,23 40,7 50,13 60,24 70,17 80,9 90,5 100,21' style='stroke: var(--accent-2)'/></svg>",
+      "<div><wa-button id='tip-xl4'>Psst</wa-button><wa-tooltip for='tip-xl4'>Boo!</wa-tooltip></div>",
+      "<div class='avatars'><wa-avatar image='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%208%208%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23457b9d%22%2F%3E%3Ccircle%20cx%3D%224%22%20cy%3D%226%22%20r%3D%224%22%20fill%3D%22%23e9c46a%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%223%22%20width%3D%223%22%20height%3D%222%22%20fill%3D%22%238338ec%22%20transform%3D%22rotate(45%204%204)%22%2F%3E%3C%2Fsvg%3E' label='Alex'></wa-avatar><wa-avatar image='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%208%208%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e9c46a%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%227%22%20r%3D%223%22%20fill%3D%22%23457b9d%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%225%22%20width%3D%226%22%20height%3D%222%22%20fill%3D%22%23ff006e%22%20transform%3D%22rotate(0%204%204)%22%2F%3E%3C%2Fsvg%3E' label='Noor'></wa-avatar><wa-avatar image='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%208%208%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23457b9d%22%2F%3E%3Ccircle%20cx%3D%225%22%20cy%3D%226%22%20r%3D%223%22%20fill%3D%22%23ff006e%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%222%22%20width%3D%223%22%20height%3D%222%22%20fill%3D%22%2306d6a0%22%20transform%3D%22rotate(45%204%204)%22%2F%3E%3C%2Fsvg%3E' label='Lou'></wa-avatar><wa-avatar initials='+3' label='And more'></wa-avatar></div>",
+      "<div class='meter' role='img' aria-label='A stacked bar'><span style='flex: 85; background: var(--accent-2)'></span><span style='flex: 31; background: var(--accent-3)'></span><span style='flex: 35; background: var(--accent-4)'></span><span style='flex: 21; background: var(--accent-1)'></span></div>",
+      "<wa-breadcrumb label='Where you are'><wa-breadcrumb-item>Home</wa-breadcrumb-item><wa-breadcrumb-item>Boards</wa-breadcrumb-item><wa-breadcrumb-item>Heart</wa-breadcrumb-item></wa-breadcrumb>",
+      "<wa-checkbox>Heart</wa-checkbox>",
+      "<wa-otp-input aria-label='Code' type='numeric' length='4'></wa-otp-input>",
+      "<wa-rating label='Rating' value='1'></wa-rating>",
+      "<wa-input aria-label='Text' placeholder='Toy…'></wa-input>",
+      "<wa-time-input aria-label='Time' hour-format='24' value='12:15'></wa-time-input>",
+      "<wa-slider aria-label='Level' value='87' style='width: 10rem'></wa-slider>",
+      "<wa-button variant='danger'>Press</wa-button>",
+      "<wa-switch>Yellow</wa-switch>",
+      "<wa-radio-group name='xl16' orientation='horizontal' value='XS'><wa-radio appearance='button' value='XS'>XS</wa-radio><wa-radio appearance='button' value='S'>S</wa-radio><wa-radio appearance='button' value='L'>L</wa-radio></wa-radio-group>",
+      "<wa-dropdown><wa-button slot='trigger' with-caret>More</wa-button><wa-dropdown-item>Undo</wa-dropdown-item><wa-dropdown-item>Copy</wa-dropdown-item><wa-dropdown-item>Paste</wa-dropdown-item><wa-dropdown-item>Redo</wa-dropdown-item></wa-dropdown>"
+    ],
+    "tall": [
+      "<div class='numpad'><wa-button>1</wa-button><wa-button>2</wa-button><wa-button>3</wa-button><wa-button>4</wa-button><wa-button>5</wa-button><wa-button>6</wa-button><wa-button>7</wa-button><wa-button>8</wa-button><wa-button>9</wa-button></div>",
+      "<wa-scroller orientation='vertical' style='height: 12rem; width: 10rem'><ol class='list'><li>Hexagon</li><li>Red</li><li>Triangle</li><li>Star</li><li>Pink</li><li>Green</li><li>Heart</li><li>Orange</li><li>Circle</li><li>Square</li><li>Purple</li><li>Blue</li><li>Teal</li><li>Yellow</li></ol></wa-scroller>",
+      "<div class='faders'><wa-slider orientation='vertical' value='60'></wa-slider><wa-slider orientation='vertical' value='73'></wa-slider><wa-slider orientation='vertical' value='40'></wa-slider></div>",
+      "<wa-textarea aria-label='Notes' placeholder='Busy…' rows='5'></wa-textarea>",
+      "<wa-split-panel position='31' style='width: 12rem; height: 12rem'><div slot='start' style='background: var(--accent-3)'></div><div slot='end' style='background: var(--accent-1)'></div></wa-split-panel>",
+      "<div class='bars' role='img' aria-label='A bar chart'><span style='height: 65%; background: var(--accent-1)'></span><span style='height: 31%; background: var(--accent-2)'></span><span style='height: 77%; background: var(--accent-3)'></span><span style='height: 88%; background: var(--accent-4)'></span><span style='height: 87%; background: var(--accent-1)'></span></div>",
+      "<div class='cloud'><wa-tag size='small' with-remove>Circle</wa-tag><wa-tag size='small' with-remove>Triangle</wa-tag><wa-tag size='small' with-remove>Purple</wa-tag><wa-tag size='small' with-remove>Green</wa-tag><wa-tag size='small' with-remove>Star</wa-tag><wa-tag size='small' with-remove>Yellow</wa-tag></div>",
+      "<div class='stack'><wa-checkbox>Pink</wa-checkbox><wa-checkbox>Purple</wa-checkbox><wa-checkbox>Yellow</wa-checkbox><wa-checkbox checked>Orange</wa-checkbox></div>",
+      "<div class='stack'><wa-button variant='brand'>Again</wa-button><wa-button>Pause</wa-button><wa-button>Skip</wa-button></div>",
+      "<wa-button-group orientation='vertical' label='Choose a size'><wa-button size='small'>Tiny</wa-button><wa-button size='small'>Huge</wa-button><wa-button size='small'>Large</wa-button><wa-button size='small'>Medium</wa-button></wa-button-group>",
+      "<div class='month' role='group' aria-label='A month'><span></span><span></span><span></span><span></span><span></span><span></span><button class='day' type='button' aria-pressed='false'>1</button><button class='day' type='button' aria-pressed='false'>2</button><button class='day' type='button' aria-pressed='false'>3</button><button class='day' type='button' aria-pressed='false'>4</button><button class='day' type='button' aria-pressed='false'>5</button><button class='day' type='button' aria-pressed='false'>6</button><button class='day' type='button' aria-pressed='false'>7</button><button class='day' type='button' aria-pressed='false'>8</button><button class='day' type='button' aria-pressed='false'>9</button><button class='day' type='button' aria-pressed='false'>10</button><button class='day' type='button' aria-pressed='false'>11</button><button class='day' type='button' aria-pressed='true'>12</button><button class='day' type='button' aria-pressed='false'>13</button><button class='day' type='button' aria-pressed='false'>14</button><button class='day' type='button' aria-pressed='false'>15</button><button class='day' type='button' aria-pressed='false'>16</button><button class='day' type='button' aria-pressed='false'>17</button><button class='day' type='button' aria-pressed='false'>18</button><button class='day' type='button' aria-pressed='false'>19</button><button class='day' type='button' aria-pressed='false'>20</button><button class='day' type='button' aria-pressed='false'>21</button><button class='day' type='button' aria-pressed='false'>22</button><button class='day' type='button' aria-pressed='false'>23</button><button class='day' type='button' aria-pressed='false'>24</button><button class='day' type='button' aria-pressed='false'>25</button><button class='day' type='button' aria-pressed='false'>26</button><button class='day' type='button' aria-pressed='false'>27</button><button class='day' type='button' aria-pressed='false'>28</button><button class='day' type='button' aria-pressed='false'>29</button><button class='day' type='button' aria-pressed='false'>30</button></div>",
+      "<div class='stack profile'><wa-avatar initials='M' label='Max'></wa-avatar><strong>Max</strong><wa-button size='small' variant='brand'>Follow</wa-button></div>"
+    ]
+  }
 }

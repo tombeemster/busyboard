@@ -1,12 +1,3 @@
-// Web Awesome (pinned) and the components the generator places, each once per board.
-// A component: type, row ('low' or 'tall'; components of similar height share rows), keep
-// (always shown, the row filling places it first), nav (a board arrow: the two go to different
-// low rows), stretch
-// (takes its row's spare width; every other tile hugs its component), tile (framed; otherwise it
-// is its own frame) and html(r, id, board) with seeded helpers r.pick/some/int/chance, a
-// board-unique id and the board's shared choices: { field } (the card's input), { five } and
-// { qr, secret } (whether the QR code replaces the numpad, and its secret word). Layout lives in index.html.
-// Rules: nothing navigates or fetches data (no href, no src, no wa-include/zoomable-frame).
 
 const base = 'https://cdn.jsdelivr.net/npm/@awesome.me/webawesome@3.14.0/dist-cdn';
 export const lib = {
@@ -15,8 +6,6 @@ export const lib = {
     .map(f => `${base}/styles/${f}`),
   classes: look => [`wa-theme-${look.theme}`, `wa-palette-${look.palette}`, `wa-brand-${look.brand}`],
 };
-// Each board gets a seeded palette and brand colour; every board uses the Awesome theme. Only
-// saturated brand colours: gray leaves the board without a colour (and the accent wheel without a hue).
 export const looks = {
   theme: ['awesome'],
   palette: ['default', 'bright', 'shoelace', 'base'],
@@ -28,9 +17,6 @@ const words = {
   shape: ['Circle', 'Square', 'Star', 'Heart', 'Triangle', 'Hexagon'],
   size: ['XS', 'S', 'M', 'L', 'XL'],
 };
-// Well-known groups of five, in their usual order, with tempting decoys from the same world.
-// Each board hides one member (generate.mjs): the other four are the switches, and so the
-// chart's legend; the dropdown offers the missing one among decoys.
 const fives = [
   ['Backstreet Boys', ['Nick', 'Brian', 'AJ', 'Kevin', 'Howie'], ['Justin', 'Lance', 'JC', 'Joey', 'Chris']],
   ['Spice Girls', ['Scary', 'Sporty', 'Baby', 'Posh', 'Ginger'], ['Grumpy', 'Sleepy', 'Dopey', 'Sneezy']],
@@ -48,18 +34,13 @@ const fives = [
   ['Gestalt principles', ['Proximity', 'Similarity', 'Closure', 'Continuity', 'Figure-ground'], ['Contrast', 'Hierarchy', 'Alignment', 'Repetition']],
   ['Vowels', ['A', 'E', 'I', 'O', 'U'], ['Y', 'W', 'K', 'Z']],
 ];
-// The board's five: its name, the four on show, the missing one and three decoys.
 export const five = r => {
   const [name, members, decoys] = r.pick(fives);
   const missing = r.pick(members);
   return { name, shown: members.filter(m => m !== missing), missing, decoys: r.some(decoys, 3) };
 };
-// The QR code's secret word (see the qr component).
 export const secrets = ['wombat', 'pickle', 'marmalade', 'tadpole', 'noodle', 'biscuit', 'walrus', 'kazoo'];
-const slug = text => text.toLowerCase().replace(/[^a-z0-9]+/g, '-'); // option values can't hold spaces
-// The button group's clue for the fifth-member minigame: "pick option <the missing member>",
-// each word in a different non-Latin script. Every member of the fives in one entry per script
-// (in the order of `scripts`; null where it doesn't translate, e.g. vowels in Arabic or Chinese).
+const slug = text => text.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const scripts = ['ru', 'ar', 'zh', 'ko', 'ja'];
 const pick = { ru: 'Выбери', ar: 'اختر', zh: '选', ko: '골라', ja: '選んで' };
 const option = { ru: 'вариант', ar: 'الخيار', zh: '选项', ko: '옵션', ja: 'オプション' };
@@ -104,8 +85,6 @@ const inScripts = {
   A: ['А', null, null, '아', 'ア'], E: ['Е', null, null, '에', 'エ'], I: ['И', null, null, '이', 'イ'],
   O: ['О', null, null, '오', 'オ'], U: ['У', null, null, '우', 'ウ'],
 };
-// The clue as [text, lang] per button: the member in a script it has, the other two words in two
-// other scripts.
 const clue = (r, missing) => {
   const names = Object.fromEntries(scripts.map((lang, i) => [lang, inScripts[missing][i]]));
   const last = r.pick(scripts.filter(lang => names[lang]));
@@ -114,13 +93,9 @@ const clue = (r, missing) => {
 };
 const numberNames = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
   'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
-// A crackable series: four different digits from 1–9 (the numpad has no 0; the tag input drops
-// duplicates) that follow steady steps (3 5 7 9) or alternating ones (1 4 3 6: +3 −1), and the
-// next term, which may leave 1–9 (5 4 9 8 → 13) but is never one of the four (so it can be
-// added as a tag at all). Seeded tries until one fits.
 const series = r => {
   for (;;) {
-    const steps = r.chance(0.25) // mostly alternating: those are the fun ones to crack
+    const steps = r.chance(0.25)
       ? Array(2).fill(r.pick([1, 2, -1, -2]))
       : r.shuffle([r.int(2, 5), -r.int(1, 2)]);
     const terms = [r.int(1, 9)];
@@ -131,11 +106,7 @@ const series = r => {
 };
 const hexes = ['#e63946', '#f4a261', '#e9c46a', '#2a9d8f', '#457b9d', '#8338ec', '#ff006e', '#06d6a0'];
 const value = r => r.int(5, 95);
-// Inputs that sit either in the card's header or on a tile of their own: each board puts one
-// in the card and the others in the low row (generate.mjs). No visible labels.
 export const fields = [
-  // The dropdown offers the board's missing member among decoys, a decoy preselected; picking
-  // the missing one is a minigame (data-answer, app.js).
   { type: 'select', html: (r, id, { five }) => {
     const [first, ...rest] = five.decoys;
     return `<wa-select aria-label='Who completes the ${five.name}?' data-answer='${slug(five.missing)}'>${[first, ...r.shuffle([...rest, five.missing])].map((t, i) => `<wa-option value='${slug(t)}'${i ? '' : ' selected'}>${t}</wa-option>`).join('')}</wa-select>`;
@@ -143,72 +114,86 @@ export const fields = [
   { type: 'time', html: r => `<wa-time-input aria-label='Time' hour-format='24' value='${String(r.int(6, 22)).padStart(2, '0')}:${r.pick(['00', '15', '30', '45'])}'></wa-time-input>` },
   { type: 'number', html: r => `<wa-number-input aria-label='Amount' value='${r.int(1, 9)}' min='0'></wa-number-input>` },
 ];
-// Inline icons (wa-icon would fetch them from a CDN).
 const icon = path => `<svg viewBox='0 0 24 24' width='1.2em' height='1.2em' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'>${path}</svg>`;
 const sun = icon("<circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/>");
 const arrow = d => icon(`<path d='${d}'/>`);
 const moon = icon("<path d='M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z'/>");
 const segmented = (id, items) => `<wa-radio-group name='${id}' orientation='horizontal' value='${items[0]}'>${items.map(t => `<wa-radio appearance='button' value='${t}'>${t}</wa-radio>`).join('')}</wa-radio-group>`;
 
+// Each component: type, row (low/tall), keep (always shown), stretch (takes spare width),
+// tile (framed) and html(r, id, board). Rules: nothing navigates or fetches (no href, no src).
 export const components = [
-  // Tiled, kept: the arrows to the previous (older) and next (newer) board, one in each low row:
-  // ← first in its row, → last (generate.mjs); app.js wires them
   { type: 'prev', row: 'low', keep: true, nav: true, tile: true, html: () => `<wa-button aria-label='Previous board' data-step='-1'>${arrow('M19 12H5M12 19l-7-7 7-7')}</wa-button>` },
   { type: 'next', row: 'low', keep: true, nav: true, tile: true, html: () => `<wa-button aria-label='Next board' data-step='1'>${arrow('M5 12h14M12 5l7 7-7 7')}</wa-button>` },
 
-  // Tiled, kept: the fields that aren't in the card this board (minus those the board leaves
-  // out, see generate.mjs)
   ...fields.map(f => ({ ...f, row: 'low', keep: true, tile: true })),
 
-  // No tile (the card is its own frame): one of the fields in its header, a light/dark toggle
-  // and a Save button that applies it (app.js)
   { type: 'card', row: 'tall', html: (r, id, board) => `<wa-card with-header><div slot='header'>${board.field.html(r, id, board)}</div>`
     + `<div class='set spread'><wa-radio-group name='${id}' orientation='horizontal' value='light' aria-label='Mode'>`
     + `<wa-radio appearance='button' value='light' aria-label='Light'>${sun}</wa-radio><wa-radio appearance='button' value='dark' aria-label='Dark'>${moon}</wa-radio></wa-radio-group>`
     + `<wa-button variant='brand'>Save</wa-button></div></wa-card>` },
 
-  // Tiled: a 3×3 numpad
   { type: 'numpad', row: 'tall', tile: true, html: () => `<div class='numpad'>${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<wa-button>${n}</wa-button>`).join('')}</div>` },
 
-  // Tiled: a button group in three colours: the fifth member's clue, "pick option <missing>",
-  // each word in another script (see clue). Each word is in a <bdi>, so right-to-left scripts read correctly while the buttons stay left-to-right
-  // (dir on a button would mirror its rounded corners at the group's ends).
   { type: 'cta', row: 'low', tile: true, html: (r, id, { five }) => { const variants = r.some(['brand', 'success', 'warning', 'danger'], 3); return `<wa-button-group label='A clue'>${clue(r, five.missing).map(([text, lang], i) => `<wa-button variant='${variants[i]}' lang='${lang}'><bdi>${text}</bdi></wa-button>`).join('')}</wa-button-group>`; } },
 
-  // Tiled: four vertical sliders; they drive the chart (app.js)
   { type: 'faders', row: 'tall', tile: true, html: r => `<div class='faders'>${[1, 2, 3, 4].map(() => `<wa-slider orientation='vertical' value='${value(r)}'></wa-slider>`).join('')}</div>` },
 
-  // Tiled, stretches: two horizontal sliders, a default one and a range, as wide as the tile
   { type: 'sliders', row: 'low', stretch: true, tile: true, html: r => { const lo = r.int(10, 40); return `<div class='sliders'><wa-slider value='${value(r)}'></wa-slider><wa-slider range min-value='${lo}' max-value='${lo + r.int(20, 50)}'></wa-slider></div>`; } },
 
-  // Tiled: a segmented control
   { type: 'segmented', row: 'low', tile: true, html: (r, id) => segmented(id, r.some(r.pick([words.size, words.colour, words.shape]), 3)) },
 
-  // Tiled: one colour picker for the board's main accent; the other accents follow from it (app.js)
   { type: 'colour', row: 'low', tile: true, html: () => `<wa-color-picker swatches='${hexes.join('; ')}' aria-label='Main colour'></wa-color-picker>` },
 
-  // Tiled: the board's five minus its missing member, as switches under the group's name, one
-  // per chart slice (app.js)
   { type: 'switches', row: 'tall', tile: true, html: (r, id, { five }) => `<wa-checkbox-group label='${five.name}'>${five.shown.map(t => `<wa-switch${r.chance(.5) ? ' checked' : ''}>${t}</wa-switch>`).join('')}</wa-checkbox-group>` },
 
-  // Tiled, on about half the boards instead of the numpad (generate.mjs): a QR code holding a
-  // message, not a link (nothing leaves the board). Scanning it reveals a secret word; adding
-  // that word as a tag is a minigame (data-secret, app.js).
   { type: 'qr', row: 'tall', tile: true, html: (r, id, { secret }) => `<wa-qr-code value='Add &#39;${secret}&#39; as tag' size='160' label='A secret message' data-secret='${secret}'></wa-qr-code>` },
 
-  // Tiled: a doughnut chart with a legend, driven live by the board's sliders and switches
-  // (app.js); this is just its frame.
   { type: 'chart', row: 'tall', tile: true, html: () => `<div class='chart'><div class='dial'><div class='doughnut'></div><span class='count'></span></div><ul class='legend'></ul></div>` },
 
-  // Tiled, kept: a four-digit code; the numpad types into it, and the tag input's four digits
-  // crack it (app.js).
   { type: 'otp', row: 'low', keep: true, tile: true, html: () => `<wa-otp-input aria-label='Code' type='numeric' length='4'></wa-otp-input>` },
 
-  // Tiled, kept, stretches: a tag input that starts with a series (spelled out). In that order
-  // the four digits are the code for the code input (data-code); adding the series' next term as
-  // a tag is a minigame too (data-next, data-next-name). See app.js.
   { type: 'tags', row: 'low', keep: true, stretch: true, tile: true, html: r => {
     const { terms, next } = series(r);
     return `<wa-tag-input aria-label='Tags' placeholder='What comes next?' value='${terms.map(t => numberNames[t]).join(',')}' data-code='${terms.join('')}' data-next='${next}' data-next-name='${numberNames[next]}' style='width:100%'></wa-tag-input>`;
   } },
+];
+
+const say = ['Hello', 'Boop', 'Busy', 'Toy', 'Yay', 'Psst'];
+const accent = k => `var(--accent-${(k % 4) + 1})`;
+const names = ['Robin', 'Sam', 'Alex', 'Kim', 'Noor', 'Jules', 'Max', 'Lou'];
+const picture = r => {
+  const [a, b, c] = r.some(hexes, 3);
+  return 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8" fill="${a}"/><circle cx="${r.int(1, 7)}" cy="${r.int(1, 7)}" r="${r.int(2, 4)}" fill="${b}"/><rect x="${r.int(0, 4)}" y="${r.int(1, 5)}" width="${r.int(3, 6)}" height="2" fill="${c}" transform="rotate(${r.int(0, 3) * 45} 4 4)"/></svg>`);
+};
+// Extras around the board on wide screens; they avoid the elements the minigames look for.
+export const extras = [
+  { row: 'low', html: r => `<wa-rating label='Rating' value='${r.int(1, 5)}'></wa-rating>` },
+  { row: 'low', html: r => `<wa-switch${r.chance(0.5) ? ' checked' : ''}>${r.pick(words.colour)}</wa-switch>` },
+  { row: 'low', html: r => `<wa-checkbox${r.chance(0.5) ? ' checked' : ''}>${r.pick(words.shape)}</wa-checkbox>` },
+  { row: 'low', html: r => `<wa-input aria-label='Text' placeholder='${r.pick(say)}…'></wa-input>` },
+  { row: 'low', html: r => `<wa-button variant='${r.pick(['brand', 'success', 'warning', 'danger', 'neutral'])}'>${r.pick(['Click', 'Press', 'Push', 'Tap'])}</wa-button>` },
+  { row: 'low', html: (r, id) => segmented(id, r.some(r.pick([words.size, words.colour, words.shape]), 3)) },
+  { row: 'low', html: r => `<wa-slider aria-label='Level' value='${value(r)}' style='width: 10rem'></wa-slider>` },
+  { row: 'low', html: r => `<wa-copy-button value='${r.pick(say)}'></wa-copy-button>` },
+  { row: 'low', html: r => `<nav class='set' aria-label='Menu'>${r.some(['Home', 'Toys', 'Games', 'About', 'Shop', 'Help'], 3).map(t => `<wa-button appearance='plain'>${t}</wa-button>`).join('')}</nav>` },
+  { row: 'low', html: r => `<wa-breadcrumb label='Where you are'>${['Home', r.pick(['Toys', 'Games', 'Boards']), r.pick(words.shape)].map(t => `<wa-breadcrumb-item>${t}</wa-breadcrumb-item>`).join('')}</wa-breadcrumb>` },
+  { row: 'low', html: () => `<wa-progress-bar indeterminate label='Loading' style='width: 10rem; --track-height: 8px'></wa-progress-bar>` },
+  { row: 'low', html: r => `<div class='meter' role='img' aria-label='A stacked bar'>${[1, 2, 3, 4].map(k => `<span style='flex: ${value(r)}; background: ${accent(k)}'></span>`).join('')}</div>` },
+  { row: 'low', html: r => `<svg class='spark' viewBox='0 0 100 30' role='img' aria-label='A sparkline'><polyline points='${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => `${i * 10},${r.int(3, 27)}`).join(' ')}' style='stroke: ${accent(r.int(0, 3))}'/></svg>` },
+  { row: 'tall', html: r => `<div class='bars' role='img' aria-label='A bar chart'>${[0, 1, 2, 3, 4].map(k => `<span style='height: ${value(r)}%; background: ${accent(k)}'></span>`).join('')}</div>` },
+  { row: 'tall', html: r => `<div class='stack'>${r.some(['Start', 'Pause', 'Stop', 'Again', 'Skip'], 3).map((t, i) => `<wa-button${i ? '' : " variant='brand'"}>${t}</wa-button>`).join('')}</div>` },
+  { row: 'tall', html: r => `<div class='faders'>${[1, 2, 3].map(() => `<wa-slider orientation='vertical' value='${value(r)}'></wa-slider>`).join('')}</div>` },
+  { row: 'tall', either: true, html: r => `<div class='stack'>${r.some(words.colour, 4).map(t => `<wa-checkbox${r.chance(0.5) ? ' checked' : ''}>${t}</wa-checkbox>`).join('')}</div>` },
+  { row: 'tall', either: true, html: (r, id) => { const items = r.some(words.shape, 4); return `<wa-radio-group label='Pick one' name='${id}' value='${items[0]}'>${items.map(t => `<wa-radio value='${t}'>${t}</wa-radio>`).join('')}</wa-radio-group>`; } },
+  { row: 'tall', html: r => `<wa-textarea aria-label='Notes' placeholder='${r.pick(say)}…' rows='5'></wa-textarea>` },
+  { row: 'tall', html: r => { const name = r.pick(names); return `<div class='stack profile'><wa-avatar initials='${name[0]}' label='${name}'></wa-avatar><strong>${name}</strong><wa-button size='small' variant='brand'>Follow</wa-button></div>`; } },
+  { row: 'tall', html: r => `<div class='cloud'>${r.some([...words.colour, ...words.shape], r.int(4, 6)).map(t => `<wa-tag size='small' with-remove>${t}</wa-tag>`).join('')}</div>` },
+  { row: 'tall', html: r => { const today = r.int(1, 28); return `<div class='month' role='group' aria-label='A month'>${'<span></span>'.repeat(r.int(0, 6))}${Array.from({ length: 30 }, (_, i) => `<button class='day' type='button' aria-pressed='${i + 1 === today}'>${i + 1}</button>`).join('')}</div>`; } },
+  { row: 'tall', html: r => { const k = r.int(0, 3); return `<wa-split-panel position='${r.int(30, 70)}' style='width: 12rem; height: 12rem'><div slot='start' style='background: ${accent(k)}'></div><div slot='end' style='background: ${accent(k + 2)}'></div></wa-split-panel>`; } },
+  { row: 'tall', html: r => `<wa-button-group orientation='vertical' label='Choose a size'>${r.some(['Tiny', 'Small', 'Medium', 'Large', 'Huge'], 4).map(t => `<wa-button size='small'>${t}</wa-button>`).join('')}</wa-button-group>` },
+  { row: 'tall', html: r => `<wa-scroller orientation='vertical' style='height: 12rem; width: 10rem'><ol class='list'>${r.shuffle([...words.colour, ...words.shape]).map(t => `<li>${t}</li>`).join('')}</ol></wa-scroller>` },
+  { row: 'low', html: r => `<wa-dropdown><wa-button slot='trigger' with-caret>${r.pick(['Menu', 'Options', 'More'])}</wa-button>${r.some(['Copy', 'Paste', 'Undo', 'Redo', 'Share', 'Rename'], 4).map(t => `<wa-dropdown-item>${t}</wa-dropdown-item>`).join('')}</wa-dropdown>` },
+  { row: 'low', html: (r, id) => `<div><wa-button id='tip-${id}'>${r.pick(['Hover me', 'Psst', 'What’s this?'])}</wa-button><wa-tooltip for='tip-${id}'>${r.pick(['Boo!', 'Hi there', 'Nothing here', 'Gotcha'])}</wa-tooltip></div>` },
+  { row: 'low', html: r => `<div class='avatars'>${r.some(names, 3).map(n => `<wa-avatar image='${picture(r)}' label='${n}'></wa-avatar>`).join('')}<wa-avatar initials='+${r.int(2, 9)}' label='And more'></wa-avatar></div>` },
 ];

@@ -109,5 +109,40 @@
         }
       ]
     }
-  ]
+  ],
+  "extras": {
+    "low": [
+      "<nav class='set' aria-label='Menu'><wa-button appearance='plain'>Help</wa-button><wa-button appearance='plain'>Home</wa-button><wa-button appearance='plain'>Toys</wa-button></nav>",
+      "<wa-progress-bar indeterminate label='Loading' style='width: 10rem; --track-height: 8px'></wa-progress-bar>",
+      "<wa-breadcrumb label='Where you are'><wa-breadcrumb-item>Home</wa-breadcrumb-item><wa-breadcrumb-item>Boards</wa-breadcrumb-item><wa-breadcrumb-item>Hexagon</wa-breadcrumb-item></wa-breadcrumb>",
+      "<div><wa-button id='tip-xl3'>Hover me</wa-button><wa-tooltip for='tip-xl3'>Nothing here</wa-tooltip></div>",
+      "<wa-radio-group name='xl4' orientation='horizontal' value='Circle'><wa-radio appearance='button' value='Circle'>Circle</wa-radio><wa-radio appearance='button' value='Star'>Star</wa-radio><wa-radio appearance='button' value='Triangle'>Triangle</wa-radio></wa-radio-group>",
+      "<wa-slider aria-label='Level' value='48' style='width: 10rem'></wa-slider>",
+      "<wa-copy-button value='Boop'></wa-copy-button>",
+      "<div class='avatars'><wa-avatar image='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%208%208%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e9c46a%22%2F%3E%3Ccircle%20cx%3D%222%22%20cy%3D%224%22%20r%3D%222%22%20fill%3D%22%232a9d8f%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%224%22%20width%3D%226%22%20height%3D%222%22%20fill%3D%22%23f4a261%22%20transform%3D%22rotate(90%204%204)%22%2F%3E%3C%2Fsvg%3E' label='Max'></wa-avatar><wa-avatar image='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%208%208%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%232a9d8f%22%2F%3E%3Ccircle%20cx%3D%223%22%20cy%3D%222%22%20r%3D%223%22%20fill%3D%22%23457b9d%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%221%22%20width%3D%225%22%20height%3D%222%22%20fill%3D%22%23f4a261%22%20transform%3D%22rotate(135%204%204)%22%2F%3E%3C%2Fsvg%3E' label='Lou'></wa-avatar><wa-avatar image='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%208%208%22%3E%3Crect%20width%3D%228%22%20height%3D%228%22%20fill%3D%22%23e9c46a%22%2F%3E%3Ccircle%20cx%3D%222%22%20cy%3D%225%22%20r%3D%222%22%20fill%3D%22%232a9d8f%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%222%22%20width%3D%223%22%20height%3D%222%22%20fill%3D%22%23ff006e%22%20transform%3D%22rotate(0%204%204)%22%2F%3E%3C%2Fsvg%3E' label='Sam'></wa-avatar><wa-avatar initials='+3' label='And more'></wa-avatar></div>",
+      "<wa-number-input aria-label='Amount' value='9' min='0'></wa-number-input>",
+      "<wa-dropdown><wa-button slot='trigger' with-caret>Menu</wa-button><wa-dropdown-item>Copy</wa-dropdown-item><wa-dropdown-item>Share</wa-dropdown-item><wa-dropdown-item>Redo</wa-dropdown-item><wa-dropdown-item>Paste</wa-dropdown-item></wa-dropdown>",
+      "<wa-button variant='danger'>Press</wa-button>",
+      "<div class='meter' role='img' aria-label='A stacked bar'><span style='flex: 18; background: var(--accent-2)'></span><span style='flex: 41; background: var(--accent-3)'></span><span style='flex: 79; background: var(--accent-4)'></span><span style='flex: 31; background: var(--accent-1)'></span></div>",
+      "<svg class='spark' viewBox='0 0 100 30' role='img' aria-label='A sparkline'><polyline points='0,12 10,19 20,13 30,21 40,12 50,5 60,22 70,15 80,11 90,25 100,22' style='stroke: var(--accent-3)'/></svg>",
+      "<wa-input aria-label='Text' placeholder='Psst…'></wa-input>",
+      "<wa-rating label='Rating' value='1'></wa-rating>",
+      "<wa-switch checked>Pink</wa-switch>",
+      "<wa-checkbox checked>Star</wa-checkbox>"
+    ],
+    "tall": [
+      "<wa-button-group orientation='vertical' label='Choose a size'><wa-button size='small'>Medium</wa-button><wa-button size='small'>Small</wa-button><wa-button size='small'>Huge</wa-button><wa-button size='small'>Tiny</wa-button></wa-button-group>",
+      "<wa-qr-code value='Add &#39;tadpole&#39; as tag' size='160' label='A secret message' data-secret='tadpole'></wa-qr-code>",
+      "<div class='stack'><wa-button variant='brand'>Start</wa-button><wa-button>Again</wa-button><wa-button>Pause</wa-button></div>",
+      "<div class='bars' role='img' aria-label='A bar chart'><span style='height: 38%; background: var(--accent-1)'></span><span style='height: 81%; background: var(--accent-2)'></span><span style='height: 78%; background: var(--accent-3)'></span><span style='height: 53%; background: var(--accent-4)'></span><span style='height: 32%; background: var(--accent-1)'></span></div>",
+      "<div class='faders'><wa-slider orientation='vertical' value='58'></wa-slider><wa-slider orientation='vertical' value='18'></wa-slider><wa-slider orientation='vertical' value='54'></wa-slider></div>",
+      "<wa-radio-group label='Pick one' name='xt5' value='Hexagon'><wa-radio value='Hexagon'>Hexagon</wa-radio><wa-radio value='Circle'>Circle</wa-radio><wa-radio value='Triangle'>Triangle</wa-radio><wa-radio value='Star'>Star</wa-radio></wa-radio-group>",
+      "<div class='month' role='group' aria-label='A month'><span></span><span></span><span></span><span></span><button class='day' type='button' aria-pressed='false'>1</button><button class='day' type='button' aria-pressed='false'>2</button><button class='day' type='button' aria-pressed='false'>3</button><button class='day' type='button' aria-pressed='false'>4</button><button class='day' type='button' aria-pressed='false'>5</button><button class='day' type='button' aria-pressed='false'>6</button><button class='day' type='button' aria-pressed='false'>7</button><button class='day' type='button' aria-pressed='false'>8</button><button class='day' type='button' aria-pressed='false'>9</button><button class='day' type='button' aria-pressed='false'>10</button><button class='day' type='button' aria-pressed='false'>11</button><button class='day' type='button' aria-pressed='false'>12</button><button class='day' type='button' aria-pressed='false'>13</button><button class='day' type='button' aria-pressed='false'>14</button><button class='day' type='button' aria-pressed='false'>15</button><button class='day' type='button' aria-pressed='false'>16</button><button class='day' type='button' aria-pressed='false'>17</button><button class='day' type='button' aria-pressed='false'>18</button><button class='day' type='button' aria-pressed='false'>19</button><button class='day' type='button' aria-pressed='false'>20</button><button class='day' type='button' aria-pressed='false'>21</button><button class='day' type='button' aria-pressed='false'>22</button><button class='day' type='button' aria-pressed='false'>23</button><button class='day' type='button' aria-pressed='false'>24</button><button class='day' type='button' aria-pressed='false'>25</button><button class='day' type='button' aria-pressed='true'>26</button><button class='day' type='button' aria-pressed='false'>27</button><button class='day' type='button' aria-pressed='false'>28</button><button class='day' type='button' aria-pressed='false'>29</button><button class='day' type='button' aria-pressed='false'>30</button></div>",
+      "<wa-split-panel position='40' style='width: 12rem; height: 12rem'><div slot='start' style='background: var(--accent-2)'></div><div slot='end' style='background: var(--accent-4)'></div></wa-split-panel>",
+      "<wa-scroller orientation='vertical' style='height: 12rem; width: 10rem'><ol class='list'><li>Triangle</li><li>Hexagon</li><li>Red</li><li>Purple</li><li>Heart</li><li>Star</li><li>Pink</li><li>Circle</li><li>Blue</li><li>Orange</li><li>Teal</li><li>Square</li><li>Green</li><li>Yellow</li></ol></wa-scroller>",
+      "<div class='stack profile'><wa-avatar initials='A' label='Alex'></wa-avatar><strong>Alex</strong><wa-button size='small' variant='brand'>Follow</wa-button></div>",
+      "<wa-textarea aria-label='Notes' placeholder='Hello…' rows='5'></wa-textarea>",
+      "<div class='cloud'><wa-tag size='small' with-remove>Hexagon</wa-tag><wa-tag size='small' with-remove>Orange</wa-tag><wa-tag size='small' with-remove>Pink</wa-tag><wa-tag size='small' with-remove>Yellow</wa-tag></div>"
+    ]
+  }
 }
