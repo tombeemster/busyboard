@@ -24,7 +24,7 @@ function rng(seed) {
 }
 
 function rows(r, board) {
-  const left = [board.field.type, board.qr ? 'numpad' : 'qr', ...board.out];
+  const left = [board.field.type, ...offTall(board), ...board.out];
   const used = components.filter(c => !left.includes(c.type));
   const low = r.shuffle(used.filter(c => c.row === 'low'));
   const lowRows = [[], []];
@@ -43,8 +43,11 @@ function around(date, board) {
   return Object.fromEntries(['low', 'tall'].map(kind => [kind, once(r, all.filter(e => e.row === kind)).map((e, i) => e.html(r, `x${kind[0]}${i}`))]));
 }
 
+// The tall place for the numpad, the QR code or the tag cloud: the two that aren't in it.
+const offTall = board => (board.cloud ? ['numpad', 'qr'] : [board.qr ? 'numpad' : 'qr', 'cloud']);
+
 function offBoard(r, board) {
-  const left = [...board.out, board.qr ? 'numpad' : 'qr'];
+  const left = [...board.out, ...offTall(board)];
   const outside = { ...board, secret: r.pick(secrets) };
   return [...extras, ...components.filter(c => left.includes(c.type)).map(c => ({ row: c.row, html: (r, id) => c.html(r, id, outside) }))];
 }
@@ -58,7 +61,7 @@ function generate(date) {
   const look = Object.fromEntries(Object.entries(looks).map(([k, v]) => [k, r.pick(v)]));
   const field = r.pick(fields);
   const out = r.some(['otp', ...['time', 'number'].filter(type => type !== field.type)], r.int(1, 2));
-  const board = { field, five: five(r), out, qr: out.includes('otp') || r.chance(0.5), secret: r.pick(secrets) };
+  const board = { field, five: five(r), out, qr: out.includes('otp') || r.chance(0.5), secret: r.pick(secrets), cloud: rng(`${date}/cloud`).chance(1 / 3) };
   const laid = rows(r, board);
   return {
     date,

@@ -10,19 +10,20 @@ export function addExtras(el, root, board) {
     el.append(pool);
     el.querySelectorAll('.row').forEach(row => row.insertAdjacentHTML('beforeend', '<div class="wing left"></div><div class="wing right"></div>'));
     el.insertAdjacentHTML('beforeend', '<div class="above"></div><div class="below"></div>');
-    el.addEventListener('wa-remove', e => {
-      if (!e.target.closest('.wing, .band')) return;
-      const cloud = e.target.closest('.cloud');
-      e.target.remove();
-      if (!cloud || cloud.querySelector('wa-tag')) return;
-      const tile = cloud.closest('.item');
-      for (const list of [extras, copies]) if (list.includes(tile)) list.splice(list.indexOf(tile), 1);
-      tile.remove();
-      el.dispatchEvent(new Event('cleaned')); // the clean-up minigame (minigames.js)
-    });
     el.addEventListener('click', e => { const day = e.target.closest('.day'); day?.setAttribute('aria-pressed', String(day.getAttribute('aria-pressed') !== 'true')); });
   }
   extras = [...pool.children];
+  // A tag cloud (on the board or around it): a removed tag goes; an emptied cloud's tile too, for good.
+  el.addEventListener('wa-remove', e => {
+    const cloud = e.target.closest('.cloud');
+    if (!cloud) return;
+    e.target.remove();
+    if (cloud.querySelector('wa-tag')) return;
+    const tile = cloud.closest('.item');
+    for (const list of [extras, copies]) if (list.includes(tile)) list.splice(list.indexOf(tile), 1);
+    tile.remove();
+    el.dispatchEvent(new Event('cleaned')); // the clean-up minigame (minigames.js); layout refills
+  });
 }
 
 export function startLayout(el, root) {
@@ -139,6 +140,7 @@ export function startLayout(el, root) {
   // Width only: phones fire resize when the toolbar slides away, and a refill then jumps the scroll.
   let wide = innerWidth;
   addEventListener('resize', () => { if (innerWidth !== wide) { wide = innerWidth; refill(); } });
+  el.addEventListener('cleaned', refill);
 
   const spacing = el.querySelector('.row > .item wa-slider[range]');
   if (spacing) {

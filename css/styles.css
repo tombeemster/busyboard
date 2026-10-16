@@ -318,6 +318,23 @@ wa-otp-input.wrong::part(segment) {
   }
 }
 
+wa-qr-code {
+  aspect-ratio: 1;
+  padding: var(--pad);
+  border: 1px solid var(--tile-edge-light);
+  border-radius: var(--tile-radius);
+}
+
+
+/* 120px (boards ask for 160). The component pins its canvas with inline min/max sizes, which
+   only !important overrides; drawn at 2x, it stays sharp. */
+wa-qr-code::part(base) {
+  min-width: 120px !important;
+  max-width: 120px !important;
+  min-height: 120px !important;
+  max-height: 120px !important;
+}
+
 .numpad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

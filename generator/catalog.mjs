@@ -147,6 +147,8 @@ export const components = [
 
   { type: 'switches', row: 'tall', tile: true, html: (r, id, { five }) => `<wa-checkbox-group label='${five.name}'>${five.shown.map(t => `<wa-switch${r.chance(.5) ? ' checked' : ''}>${t}</wa-switch>`).join('')}</wa-checkbox-group>` },
 
+  // The tag cloud: removing every tag is the clean-up minigame.
+  { type: 'cloud', row: 'tall', tile: true, html: r => `<div class='cloud'>${r.some([...words.colour, ...words.shape], r.int(4, 6)).map(t => `<wa-tag size='small' with-remove>${t}</wa-tag>`).join('')}</div>` },
   { type: 'qr', row: 'tall', tile: true, html: (r, id, { secret }) => `<wa-qr-code value='Add &#39;${secret}&#39; as tag' size='160' label='A secret message' data-secret='${secret}'></wa-qr-code>` },
 
   { type: 'chart', row: 'tall', tile: true, html: () => `<div class='chart'><div class='dial'><div class='doughnut'></div><span class='count'></span></div><ul class='legend'></ul></div>` },
@@ -188,7 +190,6 @@ export const extras = [
   { row: 'tall', either: true, html: (r, id) => { const items = r.some(words.shape, 4); return `<wa-radio-group label='Pick one' name='${id}' value='${items[0]}'>${items.map(t => `<wa-radio value='${t}'>${t}</wa-radio>`).join('')}</wa-radio-group>`; } },
   { row: 'tall', html: r => `<wa-textarea aria-label='Notes' placeholder='${r.pick(say)}…' rows='5'></wa-textarea>` },
   { row: 'tall', html: r => { const name = r.pick(names); return `<div class='stack profile'><wa-avatar initials='${name[0]}' label='${name}'></wa-avatar><strong>${name}</strong><wa-button size='small' variant='brand'>Follow</wa-button></div>`; } },
-  { row: 'tall', html: r => `<div class='cloud'>${r.some([...words.colour, ...words.shape], r.int(4, 6)).map(t => `<wa-tag size='small' with-remove>${t}</wa-tag>`).join('')}</div>` },
   { row: 'tall', html: r => { const today = r.int(1, 28); return `<div class='month' role='group' aria-label='A month'>${'<span></span>'.repeat(r.int(0, 6))}${Array.from({ length: 30 }, (_, i) => `<button class='day' type='button' aria-pressed='${i + 1 === today}'>${i + 1}</button>`).join('')}</div>`; } },
   { row: 'tall', html: r => { const k = r.int(0, 3); return `<wa-split-panel position='${r.int(30, 70)}' style='width: 12rem; height: 12rem'><div slot='start' style='background: ${accent(k)}'></div><div slot='end' style='background: ${accent(k + 2)}'></div></wa-split-panel>`; } },
   { row: 'tall', html: r => `<wa-button-group orientation='vertical' label='Choose a size'>${r.some(['Tiny', 'Small', 'Medium', 'Large', 'Huge'], 4).map(t => `<wa-button size='small'>${t}</wa-button>`).join('')}</wa-button-group>` },
