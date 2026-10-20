@@ -12,7 +12,7 @@ const board = (date === asked && askedBoard) || (await json(`boards/${date}.json
 const go = d => (location.search = `?d=${d}`);
 // Dates are newest first: jump(1) goes to the newer board, jump(-1) to the older one.
 const at = dates.indexOf(date);
-const jump = step => { const d = dates[at - step]; if (d) go(d); return Boolean(d); };
+const jump = step => { const d = dates[at - step]; if (d) go(d); };
 addEventListener('keydown', e => {
   if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
   // Arrow keys belong to the components when focus is on the board or in a field.

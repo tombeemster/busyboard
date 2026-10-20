@@ -52,7 +52,6 @@ export function setupMinigames({ el, at, jump, progressRow, callout }) {
     if (showProgress(message) === total) celebrate({ title: 'All minigames done!', body: `You completed all ${total} minigames across the boards. Every toy has given up its secret.`, action: 'Yay!' });
     else toast(message, 'success');
   };
-  window.busyboard = { toast, celebrate, jump, unlock, complete };
   el.addEventListener('cleaned', () => complete('clean', 'Cleaned up'));
 
   // Listeners sit on the whole board, so copies of minigame tiles around it play too.
