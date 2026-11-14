@@ -41,7 +41,7 @@ el.innerHTML = board.rows.map(row => `<div class="row" data-kind="${row.kind}">$
 const seed = [...board.date].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 2654435761), 7) >>> 0;
 const lows = [...el.querySelectorAll('.row[data-kind="low"]')], creditRow = lows[seed % lows.length];
 const spots = [...[...creditRow.children].filter(tile => tile.dataset.type !== 'prev'), ...(creditRow.querySelector(':scope > [data-type="next"]') ? [] : [null])];
-const credit = '<div class="item tile keep" data-type="credit"><div class="set credit"><wa-avatar image="assets/avatar.jpg" label="tombeemster"></wa-avatar>'
+const credit = '<div class="item tile keep" data-type="credit"><div class="set credit"><wa-avatar image="assets/avatar.png" label="tombeemster"></wa-avatar>'
   + '<span>Busyboard by <a href="https://github.com/tombeemster" target="_blank">tombeemster</a></span></div></div>';
 creditRow.insertBefore(Object.assign(document.createElement('template'), { innerHTML: credit }).content, spots[(seed >>> 8) % spots.length]);
 addExtras(el, root, board);

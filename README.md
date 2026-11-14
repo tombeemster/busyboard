@@ -3,6 +3,8 @@ A daily board of interactive components from a web component library, like a dig
 
 Each date gets its own seeded board of [Web Awesome](https://webawesome.com) components: a look, a selection of toys and a handful of minigames to discover. Boards are kept as snapshots, so past days stay around.
 
+![busyboard](/assets/busyboard.gif)
+
 ## Run it locally
 
 No build step. Serve the folder with any static server:
@@ -14,7 +16,7 @@ npx serve
 ## Generate boards
 
 ```sh
-node generator/generate.mjs              # today
+node generator/generate.mjs                         # today
 node generator/generate.mjs 2026-10-08 2026-10-31   # a range
 ```
 
