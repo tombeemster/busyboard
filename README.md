@@ -1,7 +1,10 @@
-# busyboard
-A daily board of interactive components from a web component library, like a digital toddler's busyboard.
+# Busyboard
 
-Each date gets its own seeded board of [Web Awesome](https://webawesome.com) components: a look, a selection of toys and a handful of minigames to discover. Boards are kept as snapshots, so past days stay around.
+A daily board of interactive UI components, like a digital toddler's busyboard.
+
+Every day, a new selection of [Web Awesome](https://webawesome.com) components renders over night. Familiar toys like sliders, switches and buttons to tweak and tune. Some of them drive others, some purely exist for fidgeting purposes. All boards are stored and accessible using the prev/next buttons or the keyboard arrows.
+
+Live at [tombeemster.github.io/busyboard](https://tombeemster.github.io/busyboard/)
 
 ![busyboard](/assets/busyboard.gif)
 
